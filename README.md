@@ -2,11 +2,12 @@ Express Rate Limiter
 ====================
 
 Rate limiter middleware for express applications.
-This limiter has two kinds of limits. An inner and outer limit.
+
+This limiter has two kinds of limits: an inner and outer limit. It limites based on user ip.
 
 The inner limit is against hammering (e.g. only 3 calls allowed per second). The outer limit is for protecting against over-use. (e.g. max 60 times per two minutes).
 
-The limits are currently held in memory using the npm package ['memory-cache'](https://www.npmjs.org/package/memory-cache). It's on my roadmap to abstract the use of this module, so other modules can be plugged in instead (e.g. redis).
+The limits are currently held in memory. It's on my roadmap to abstract the use of this module, so other modules can be plugged in instead (e.g. redis).
 
 
 # Usage
