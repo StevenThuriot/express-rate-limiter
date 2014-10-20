@@ -12,6 +12,12 @@ The limits are currently held in memory. It's on my roadmap to abstract the use 
 
 # Usage
 
+Install
+
+```
+npm install express-rate-limiter --save
+```
+
 First, create a new Limiter;
 
 ```
