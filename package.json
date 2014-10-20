@@ -19,6 +19,7 @@
 	},
 	"homepage": "https://github.com/StevenThuriot/express-rate-limiter",
 	"dependencies": {
-		"express": "4.*"
+		"express": "4.*",
+		"memory-cache": "*"
 	}
 }
