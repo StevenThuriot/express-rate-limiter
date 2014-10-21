@@ -49,8 +49,10 @@ Limiter.prototype.middleware = function() {
         var limit = self.__db.get(ip);
         
         if (limit) { //Existing user            
-			var now = Date.now();
-            var timeLimit = limit.date + self.__innerTimeLimit;
+            var now = Date.now();
+            var limitDate = limit.date;
+            
+            var timeLimit = limitDate + self.__innerTimeLimit;
             
 			if (now > timeLimit) {
 				limit.inner = self.__innerLimit;
@@ -62,7 +64,7 @@ Limiter.prototype.middleware = function() {
 			limit.date = now;
 
             if (limit.inner < 1 || limit.outer < 1) {
-                res.set('Retry-After', limit.date - Date.now());
+                res.set('Retry-After', limitDate - now);
                 res.status(429).send('Rate limit exceeded');                    
                 return;
             }
