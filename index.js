@@ -23,7 +23,7 @@ var Limiter = module.exports = function(options) {
 Limiter.defaults = {
     outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
 	outerLimit: 60,	
-	innerTimeLimit: 1000,// 1 second
+	innerTimeLimit: 1500,// 1.5 seconds
 	innerLimit: 3
 };
 
@@ -35,42 +35,54 @@ Limiter.prototype.__put = function(ip, limit) {
     this.__db.put(ip, limit, this.__outerTimeLimit);
 }
 
-Limiter.prototype.__init = function(ip, now) {    
-    this.__put(ip, { date: Date.now(), inner: this.__innerLimit, outer: this.__outerLimit });
-}
-
-
 Limiter.prototype.middleware = function() {    
     var self = this;
     
     var middleware = function (req, res, next) {
-        var ip = self.__getip(req).clientIp;        
-                
-        var limit = self.__db.get(ip);
+        res.setHeader('X-RateLimit-Limit', self.__outerLimit);  
         
-        if (limit) { //Existing user            
-            var now = Date.now();
+        var ip = self.__getip(req).clientIp;        
+        var limit = self.__db.get(ip);
+        var now = Date.now();
+        
+        if (limit) { //Existing user    
             var limitDate = limit.date;
-            
-            var timeLimit = limitDate + self.__innerTimeLimit;
-            
+            var timeLimit = limitDate + self.__innerTimeLimit;      
+                   
 			if (now > timeLimit) {
 				limit.inner = self.__innerLimit;
 			} else {
 				limit.inner--;
 			}
-			
+            			
 			limit.outer--;
-			limit.date = now;
-
-            if (limit.inner < 1 || limit.outer < 1) {
-                res.set('Retry-After', limitDate - now);
+			limit.date = now;  
+            
+            res.setHeader('X-RateLimit-Remaining', limit.outer - 1); 
+            res.setHeader('X-RateLimit-Reset', limit.outerReset);
+            
+            var shouldLimit = false;
+            
+            if (limit.outer < 1) {
+                shouldLimit = true;
+                res.setHeader('Retry-After', Math.floor(limit.outerReset - (now/1000)));
+            } else if (limit.inner < 1) {
+                shouldLimit = true;
+                res.setHeader('Retry-After', Math.floor(((timeLimit - now)/1000)));
+            }
+            
+            
+            if (shouldLimit) {             
                 res.status(429).send('Rate limit exceeded');                    
-                return;
+                return;   
             }
         } else {
             //New user
-            self.__init(ip);
+            var outerReset =  Math.floor((now + self.__outerTimeLimit) / 1000);
+            self.__put(ip, { date: now, inner: self.__innerLimit, outer: self.__outerLimit, outerReset: outerReset });
+            
+            res.setHeader('X-RateLimit-Remaining', self.__outerLimit - 1);
+            res.setHeader('X-RateLimit-Reset', outerReset);
         }
         
         return next();
