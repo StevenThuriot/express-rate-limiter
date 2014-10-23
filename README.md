@@ -52,9 +52,22 @@ They can be overwritten globally by passing them to the initiator.
 var limiter = new Limiter({innerLimit: 5});
 ```
 
+When the limit has been reached, the actual method logic will not be executed, but instead a status 429 (Too many Requests) will be sent to the client.
+
+#Headers
+Headers are automatically added to the response.
+
+The available headers are:
+* X-RateLimit-Limit
+* X-RateLimit-Remaining
+* X-RateLimit-Reset
+* Retry-After (Only in case of a 429 response)
+
+For `X-RateLimit`-headers, the outer limits are used as response values.
 
 #Roadmap
 - Overwritten limits per middleware
+- Make header response optional
 - Abstracted db so memory-cache is not required
   - Provide memory-cache plugin
   - Provide redis plugin
