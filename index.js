@@ -12,7 +12,31 @@ var Limiter = module.exports = function(options) {
 			}
 		}
 	}
-		
+	
+    if (configuration.outerTimeLimit <= configuration.innerTimeLimit) {
+        throw new Error('Outer time limit has to be greater than inner time limit.');
+    }
+    
+    if (configuration.innerTimeLimit < 1) {
+        throw new Error('Inner time limit has to be greater than 0.');
+    }
+    
+    if (configuration.outerTimeLimit < 1) {
+        throw new Error('Outer time limit has to be greater than 0.');
+    }
+    
+    if (configuration.innerLimit < 1) {
+        throw new Error('Inner limit has to be greater than 0.');
+    }
+    
+    if (configuration.outerLimit < 1) {
+        throw new Error('Outer limit has to be greater than 0.');
+    }
+    
+    if (typeof configuration.headers !== 'boolean') {
+        throw new Error('Headers must be a boolean value.');
+    }
+    
 	this.__outerTimeLimit = configuration.outerTimeLimit;
 	this.__outerLimit = configuration.outerLimit;
 	
