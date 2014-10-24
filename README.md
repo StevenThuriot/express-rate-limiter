@@ -42,7 +42,8 @@ Limiter.defaults = {
   outerTimeLimit: 2 * 60 * 1000, // 2 Minutes
 	outerLimit: 60,	
 	innerTimeLimit: 1000, // 1 second
-	innerLimit: 3
+	innerLimit: 3,
+    headers: true
 };
 ```
 
@@ -67,7 +68,6 @@ For `X-RateLimit`-headers, the outer limits are used as response values.
 
 #Roadmap
 - Overwritten limits per middleware
-- Make header response optional
 - Abstracted db so memory-cache is not required
   - Provide memory-cache plugin
   - Provide redis plugin
