@@ -1,7 +1,20 @@
 var Limiter = module.exports = function(options) {
-	var configuration = {};
-	
-	var settings = [ Limiter.defaults, options ];
+	this.__configuration = {}; //Init to keep life simple
+    this.__configuration = this.__buildConfiguration(options);
+};
+
+Limiter.prototype.__buildConfiguration = function(options) {
+    
+    var defaults = {
+        outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
+        outerLimit: 60,	
+        innerTimeLimit: 1500,// 1.5 seconds
+        innerLimit: 3,
+        headers: true
+    };
+    
+    var configuration = {};    
+    var settings = [ defaults, this.__configuration, options ];
 	
 	for (var i = 0; i < settings.length; i++) {
 		var source = settings[i]
@@ -37,20 +50,8 @@ var Limiter = module.exports = function(options) {
         throw new Error('Headers must be a boolean value.');
     }
     
-	this.__outerTimeLimit = configuration.outerTimeLimit;
-	this.__outerLimit = configuration.outerLimit;
-	
-	this.__innerTimeLimit = configuration.innerTimeLimit;
-	this.__innerLimit = configuration.innerLimit;
-    this.__useHeaders = configuration.headers;
-};
-
-Limiter.defaults = {
-    outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
-	outerLimit: 60,	
-	innerTimeLimit: 1500,// 1.5 seconds
-	innerLimit: 3,
-    headers: true
+    
+    return configuration;
 };
 
 Limiter.prototype.__db = require('memory-cache');
@@ -59,13 +60,14 @@ Limiter.prototype.__getip = require('ipware')().get_ip; //function, accepts requ
 
 Limiter.prototype.__put = function(ip, limit) {
     this.__db.put(ip, limit, this.__outerTimeLimit);
-}
+};
 
-Limiter.prototype.middleware = function() {    
+Limiter.prototype.middleware = function(options) {    
     var self = this;
+    var configuration = self.__buildConfiguration(options);
     
     var middleware = function (req, res, next) {
-        if (self.__useHeaders) res.setHeader('X-RateLimit-Limit', self.__outerLimit);
+        if (configuration.headers) res.setHeader('X-RateLimit-Limit', configuration.outerLimit);
         
         var ip = self.__getip(req).clientIp;        
         var limit = self.__db.get(ip);
@@ -73,10 +75,10 @@ Limiter.prototype.middleware = function() {
         
         if (limit) { //Existing user    
             var limitDate = limit.date;
-            var timeLimit = limitDate + self.__innerTimeLimit;      
+            var timeLimit = limitDate + configuration.innerTimeLimit;      
                    
 			if (now > timeLimit) {
-				limit.inner = self.__innerLimit;
+				limit.inner = configuration.innerLimit;
 			} else {
 				limit.inner--;
 			}
@@ -84,7 +86,7 @@ Limiter.prototype.middleware = function() {
 			limit.outer--;
 			limit.date = now;  
             
-            if (self.__useHeaders) {
+            if (configuration.headers) {
                 res.setHeader('X-RateLimit-Remaining', limit.outer - 1); 
                 res.setHeader('X-RateLimit-Reset', limit.outerReset);
             }
@@ -93,10 +95,10 @@ Limiter.prototype.middleware = function() {
             
             if (limit.outer < 1) {
                 shouldLimit = true;
-                if (self.__useHeaders) res.setHeader('Retry-After', Math.floor(limit.outerReset - (now/1000)));
+                if (configuration.headers) res.setHeader('Retry-After', Math.floor(limit.outerReset - (now/1000)));
             } else if (limit.inner < 1) {
                 shouldLimit = true;
-                if (self.__useHeaders) res.setHeader('Retry-After', Math.floor(((timeLimit - now)/1000)));
+                if (configuration.headers) res.setHeader('Retry-After', Math.floor(((timeLimit - now)/1000)));
             }
             
             
@@ -106,11 +108,11 @@ Limiter.prototype.middleware = function() {
             }
         } else {
             //New user
-            var outerReset =  Math.floor((now + self.__outerTimeLimit) / 1000);
-            self.__put(ip, { date: now, inner: self.__innerLimit, outer: self.__outerLimit, outerReset: outerReset });
+            var outerReset =  Math.floor((now + configuration.outerTimeLimit) / 1000);
+            self.__put(ip, { date: now, inner: configuration.innerLimit, outer: configuration.outerLimit, outerReset: outerReset });
             
-            if (self.__useHeaders) {
-                res.setHeader('X-RateLimit-Remaining', self.__outerLimit - 1);
+            if (configuration.headers) {
+                res.setHeader('X-RateLimit-Remaining', configuration.outerLimit - 1);
                 res.setHeader('X-RateLimit-Reset', outerReset);
             }
         }
@@ -119,4 +121,4 @@ Limiter.prototype.middleware = function() {
     };
     
     return middleware;
-}
+};
