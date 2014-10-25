@@ -47,11 +47,20 @@ Limiter.defaults = {
 };
 ```
 
-They can be overwritten globally by passing them to the initiator.
+They can be overwritten globally by passing them to the initiator. Properties that were not passed will automatically take default value.
 
 ```
 var limiter = new Limiter({innerLimit: 5});
 ```
+
+Settings can also be overwritten per middleware. When a setting is not passed through the initiator, it will revert to the setting specified in the ctor of the Limiter you're using. If you didn't pass that setting there either, it will use the default value instead.
+
+```
+app.post('/', limiter.middleware({innerLimit: 10, headers: false}), function(req, res) {   
+
+});
+```
+
 
 When the limit has been reached, the actual method logic will not be executed, but instead a status 429 (Too many Requests) will be sent to the client.
 
@@ -67,7 +76,6 @@ The available headers are:
 For `X-RateLimit`-headers, the outer limits are used as response values.
 
 #Roadmap
-- Overwritten limits per middleware
 - Abstracted db so memory-cache is not required
   - Provide memory-cache plugin
   - Provide redis plugin
