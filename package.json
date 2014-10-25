@@ -1,6 +1,6 @@
 {
   "name": "express-rate-limiter",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Rate limiter middleware for express applications",
   "main": "index.js",
   "author": "Steven Thuriot",
