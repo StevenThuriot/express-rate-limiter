@@ -1,6 +1,8 @@
 Express Rate Limiter
 ====================
 
+![npm](https://img.shields.io/npm/v/express-rate-limiter.svg?style=flat-square) ![downloads](https://img.shields.io/npm/dm/express-rate-limiter.svg?style=flat-square) ![license](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=flat-square)
+
 Rate limiter middleware for express applications.
 
 This limiter has two kinds of limits: an inner and outer limit. It limites based on user ip.
