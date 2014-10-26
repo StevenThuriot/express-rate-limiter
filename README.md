@@ -35,17 +35,30 @@ app.post('/', limiter.middleware(), function(req, res) {
 
 Anything written in the callback will now be rate limited.
 
+
+
+#Default values
+
 Default settings for the created middleware are as follows:
 
-```
-Limiter.defaults = {
-  outerTimeLimit: 2 * 60 * 1000, // 2 Minutes
-	outerLimit: 60,	
-	innerTimeLimit: 1000, // 1 second
-	innerLimit: 3,
-    headers: true
-};
-```
+* outerTimeLimit: `2 * 60 * 1000`
+	* default: `2 minutes`
+	* Time in milliseconds for the outer limit.
+	* This will also be used as the cache expiration.
+	* Mainly to prevent over-use: The lenient limiter. 
+* outerLimit: `60`
+	* default: `60 attempts`
+	* Number of attemps for the outer limit.
+* innerTimeLimit: `1500`
+	* default: `1.5 seconds`
+	* Time in milliseconds for the inner limit.
+	* Mainly to prevent hammering: The hardcore limiter.
+* innerLimit: `3`
+	* default: `3 attemps`
+	* Number of attempts for the inner limit.
+* headers: `true`
+	* default: `add headers`
+	* Send headers along with response.
 
 They can be overwritten globally by passing them to the initiator. Properties that were not passed will automatically take default value.
 
@@ -74,26 +87,6 @@ The available headers are:
 * Retry-After (Only in case of a 429 response)
 
 For `X-RateLimit`-headers, the outer limits are used as response values.
-
-#Default values
-* outerTimeLimit: 2 * 60 * 1000
-	* default: `2 minutes`
-	* Time in milliseconds for the outer limit.
-	* This will also be used as the cache expiration.
-	* Mainly to prevent over-use: The lenient limiter. 
-* outerLimit: 60	
-	* default: `60 attempts`
-	* Number of attemps for the outer limit.
-* innerTimeLimit: 1000
-	* default: `1 second`
-	* Time in milliseconds for the inner limit.
-	* Mainly to prevent hammering: The hardcore limiter.
-* innerLimit: 3
-	* default: `3 attemps`
-	* Number of attempts for the inner limit.
-* headers: true
-	* default: `true`
-	* Send headers along with response.
     
 #Roadmap
 - Abstracted db so memory-cache is not required

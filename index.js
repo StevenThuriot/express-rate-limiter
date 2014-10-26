@@ -4,14 +4,14 @@ var Limiter = module.exports = function(options) {
 };
 
 Limiter.prototype.__buildConfiguration = function(options) {
-    
-    var defaults = {
-        outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
-        outerLimit: 60,	
-        innerTimeLimit: 1500,// 1.5 seconds
-        innerLimit: 3,
-        headers: true
-    };
+
+	var defaults = {
+		outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
+		outerLimit: 60,	
+		innerTimeLimit: 1500,// 1.5 seconds
+		innerLimit: 3,
+		headers: true
+	};
     
     var configuration = {};    
     var settings = [ defaults, this.__configuration, options ];
