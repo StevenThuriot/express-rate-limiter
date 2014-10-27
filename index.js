@@ -1,20 +1,18 @@
 var Limiter = module.exports = function(options) {
-	this.__configuration = {}; //Init to keep life simple
-    this.__configuration = this.__buildConfiguration(options);
-};
-
-Limiter.prototype.__buildConfiguration = function(options) {
-
-	var defaults = {
+	this.__configuration = {
 		outerTimeLimit: 2 * 60 * 1000,// 2 Minutes
 		outerLimit: 60,	
 		innerTimeLimit: 1500,// 1.5 seconds
 		innerLimit: 3,
 		headers: true
 	};
-    
+	
+	this.__configuration = this.__buildConfiguration(options);
+};
+
+Limiter.prototype.__buildConfiguration = function(options) {
     var configuration = {};    
-    var settings = [ defaults, this.__configuration, options ];
+    var settings = [ this.__configuration, options ];
 	
 	for (var i = 0; i < settings.length; i++) {
 		var source = settings[i]
@@ -49,7 +47,6 @@ Limiter.prototype.__buildConfiguration = function(options) {
     if (typeof configuration.headers !== 'boolean') {
         throw new Error('Headers must be a boolean value.');
     }
-    
     
     return configuration;
 };
