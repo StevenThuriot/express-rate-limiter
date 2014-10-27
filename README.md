@@ -24,7 +24,8 @@ First, create a new Limiter;
 
 ```
 var Limiter = require('express-rate-limiter');
-var limiter = new Limiter();
+var MemoryStore = require('express-rate-limiter/memoryStore');
+var limiter = new Limiter({ db : new MemoryStore() });
 ```
 
 Afterwards, use the limiter to create an express middleware for the express methods you want to rate limit.
@@ -61,6 +62,12 @@ Default settings for the created middleware are as follows:
 * headers: `true`
 	* default: `add headers`
 	* Send headers along with response.
+* limitOnError: `true`
+    * default: `true`
+    * When an error occurs when looking up the ip in the key store, limit the post if `true`.
+* db: `undefined`    
+    * default: No default value available.
+    * Key Value store being used to rate limit.
 
 They can be overwritten globally by passing them to the initiator. Properties that were not passed will automatically take default value.
 
