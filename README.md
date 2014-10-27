@@ -22,7 +22,7 @@ npm install express-rate-limiter --save
 
 First, create a new Limiter;
 
-```
+```javascript
 var Limiter = require('express-rate-limiter');
 var MemoryStore = require('express-rate-limiter/memoryStore');
 var limiter = new Limiter({ db : new MemoryStore() });
@@ -30,7 +30,7 @@ var limiter = new Limiter({ db : new MemoryStore() });
 
 Afterwards, use the limiter to create an express middleware for the express methods you want to rate limit.
 
-```
+```javascript
 app.post('/', limiter.middleware(), function(req, res) {   
 
 });
@@ -71,13 +71,13 @@ Default settings for the created middleware are as follows:
 
 They can be overwritten globally by passing them to the initiator. Properties that were not passed will automatically take default value.
 
-```
+```javascript
 var limiter = new Limiter({innerLimit: 5});
 ```
 
 Settings can also be overwritten per middleware. When a setting is not passed through the initiator, it will revert to the setting specified in the ctor of the Limiter you're using. If you didn't pass that setting there either, it will use the default value instead.
 
-```
+```javascript
 app.post('/', limiter.middleware({innerLimit: 10, headers: false}), function(req, res) {   
 
 });
