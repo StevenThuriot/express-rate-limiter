@@ -4,11 +4,11 @@ var Limiter = module.exports = function (options) {
         outerLimit: 60,
         innerTimeLimit: 1500, // 1.5 seconds
         innerLimit: 3,
-        headers: true
+        headers: true,
+        limitOnError: true
     };
 
     this.__configuration = this.__buildConfiguration(options);
-    this.__db = this.__configuration.db;
 };
 
 Limiter.prototype.__buildConfiguration = function (options) {
@@ -49,6 +49,10 @@ Limiter.prototype.__buildConfiguration = function (options) {
         throw new Error('Headers must be a boolean value.');
     }
 
+    if (typeof configuration.limitOnError !== 'boolean') {
+        throw new Error('limitOnError must be a boolean value.');
+    }
+
     if (configuration.db === undefined) {
         throw new Error('No db has been passed.');
     }
@@ -63,10 +67,16 @@ Limiter.prototype.middleware = function (options) {
     var middleware = function (req, res, next) {
         if (configuration.headers) res.setHeader('X-RateLimit-Limit', configuration.outerLimit);
 
-        self.__db.hit(req, configuration, function (err, limit, now) {
+        configuration.db.hit(req, configuration, function (err, limit, now) {
             if (err) {
-                res.status(500).send('Error.');
-                return console.log(err);
+                console.log(err);
+
+                if (configuration.limitOnError) {
+                    res.status(500).send('Error.');
+                    return;
+                } else {
+                    return next();
+                }
             }
 
             if (configuration.headers) {
@@ -78,10 +88,16 @@ Limiter.prototype.middleware = function (options) {
 
             if (limit.outer < 1) {
                 shouldLimit = true;
-                if (configuration.headers) res.setHeader('Retry-After', Math.floor(limit.outerReset - (now / 1000)));
+
+                if (configuration.headers) {
+                    res.setHeader('Retry-After', Math.floor(limit.outerReset - (now / 1000)));
+                }
             } else if (limit.inner < 1) {
                 shouldLimit = true;
-                if (configuration.headers) res.setHeader('Retry-After', Math.floor(((limit.date + configuration.innerTimeLimit - now) / 1000)));
+
+                if (configuration.headers) {
+                    res.setHeader('Retry-After', Math.floor(((limit.date + configuration.innerTimeLimit - now) / 1000)));
+                }
             }
 
             if (shouldLimit) {
