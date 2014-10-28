@@ -1,23 +1,45 @@
 var Store = require('./store');
 
 var MemoryStore = module.exports = function () {
-
+    this.__cache = {}
 }
 
 MemoryStore.prototype = Object.create(Store.prototype);
 
-MemoryStore.prototype.__db = require('memory-cache');
-
 MemoryStore.prototype.get = function (ip, callback) {
-    var self = this;
-    var limit = self.__db.get(ip);
+    var data = this.__cache[ip];
+    var result;
 
-    callback(undefined, limit);
+    if (data && data.expire >= Date.now()) {
+        result = data.value;
+    } else {
+        result = undefined;
+    }
+
+    callback(undefined, result);
 };
 
 MemoryStore.prototype.create = function (ip, limit, timeout, callback) {
-    var self = this;
-    self.__db.put(ip, limit, timeout);
+    var cache = this.__cache;
+
+    var oldRecord = cache[ip];
+
+    if (oldRecord) {
+        clearTimeout(oldRecord.timeout);
+    }
+
+    var record = {
+        value: limit,
+        expire: timeout + Date.now()
+    };
+
+    cache[ip] = record;
+
+    record.timeout = setTimeout(function () {
+        delete cache[ip];
+        console.log('delete ' + ip);
+    }, timeout);
+
     callback(undefined, limit);
 };
 

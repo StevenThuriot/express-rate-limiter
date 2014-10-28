@@ -28,6 +28,8 @@ var MemoryStore = require('express-rate-limiter/memoryStore');
 var limiter = new Limiter({ db : new MemoryStore() });
 ```
 
+The memory store is a lightweight in memory cache. This can be replaced by any other database implementing [store.js](/store.js), for example the [MemoryStore](/memoryStore.js).
+
 Afterwards, use the limiter to create an express middleware for the express methods you want to rate limit.
 
 ```javascript
@@ -98,6 +100,4 @@ The available headers are:
 For `X-RateLimit`-headers, the outer limits are used as response values.
     
 #Roadmap
-- Abstracted db so memory-cache is not required
-  - Provide memory-cache plugin
-  - Provide redis plugin
+- Redis plugin

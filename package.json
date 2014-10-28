@@ -1,26 +1,25 @@
 {
-  "name": "express-rate-limiter",
-  "version": "0.7.2",
-  "description": "Rate limiter middleware for express applications",
-  "main": "index.js",
-  "author": "Steven Thuriot",
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    "name": "express-rate-limiter",
+    "version": "0.8.0",
+    "description": "Rate limiter middleware for express applications",
+    "main": "index.js",
+    "author": "Steven Thuriot",
+    "licenses": [
+        {
+            "type": "Apache-2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/StevenThuriot/express-rate-limiter.git"
-  },
-  "bugs": {
-    "url": "https://github.com/StevenThuriot/express-rate-limiter/issues"
-  },
-  "homepage": "https://github.com/StevenThuriot/express-rate-limiter",
-  "dependencies": {
-    "express": "~4.9.8",
-    "ipware": "0.0.2",
-    "memory-cache": "0.0.5"
-  }
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/StevenThuriot/express-rate-limiter.git"
+    },
+    "bugs": {
+        "url": "https://github.com/StevenThuriot/express-rate-limiter/issues"
+    },
+    "homepage": "https://github.com/StevenThuriot/express-rate-limiter",
+    "dependencies": {
+        "express": "~4.9.8",
+        "ipware": "0.0.2"
+    }
 }
