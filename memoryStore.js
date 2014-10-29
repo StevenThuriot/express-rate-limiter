@@ -16,7 +16,7 @@ MemoryStore.prototype.get = function (ip, callback) {
         result = undefined;
     }
 
-    callback(undefined, result);
+    callback(null, result);
 };
 
 MemoryStore.prototype.create = function (ip, limit, timeout, callback) {
@@ -40,10 +40,10 @@ MemoryStore.prototype.create = function (ip, limit, timeout, callback) {
         console.log('delete ' + ip);
     }, timeout);
 
-    callback(undefined, limit);
+    callback(null, limit);
 };
 
 MemoryStore.prototype.update = function (ip, limit, callback) {
     //In memory, already updated.
-    callback(undefined, limit);
+    callback(null, limit);
 };
