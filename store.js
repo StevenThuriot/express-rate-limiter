@@ -21,8 +21,8 @@ Store.prototype.hit = function (req, configuration, callback) {
             var limitDate = limit.date;
             var timeLimit = limitDate + configuration.innerTimeLimit;
 
-			var resetInner = now > timeLimit;
-            if (resetInner) {
+            var resetInner = now > timeLimit;
+            if (resetInner === true) {
                 limit.inner = configuration.innerLimit;
             } else {
                 limit.inner--;
