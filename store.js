@@ -21,7 +21,8 @@ Store.prototype.hit = function (req, configuration, callback) {
             var limitDate = limit.date;
             var timeLimit = limitDate + configuration.innerTimeLimit;
 
-            if (now > timeLimit) {
+			var resetInner = now > timeLimit;
+            if (resetInner) {
                 limit.inner = configuration.innerLimit;
             } else {
                 limit.inner--;
@@ -30,7 +31,7 @@ Store.prototype.hit = function (req, configuration, callback) {
             limit.outer--;
             limit.date = now;
 
-            self.update(ip, limit, function (error, result) {
+            self.update(ip, limit, resetInner, function (error, result) {
                 callback(error, result, now);
             });
         } else {

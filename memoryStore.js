@@ -43,7 +43,7 @@ MemoryStore.prototype.create = function (ip, limit, timeout, callback) {
     callback(null, limit);
 };
 
-MemoryStore.prototype.update = function (ip, limit, callback) {
+MemoryStore.prototype.update = function (ip, limit, resetInner, callback) {
     //In memory, already updated.
     callback(null, limit);
 };
