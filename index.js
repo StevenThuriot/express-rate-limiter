@@ -67,7 +67,7 @@ Limiter.prototype.middleware = function (options) {
     var middleware = function (req, res, next) {
         if (configuration.headers) res.setHeader('X-RateLimit-Limit', configuration.outerLimit);
 
-        configuration.db.hit(req, configuration, function (err, limit, now) {
+        configuration.db.hit(req, configuration, function (err, limit, previousLimitDate) {
             if (err) {
                 console.log(err);
 
@@ -90,13 +90,13 @@ Limiter.prototype.middleware = function (options) {
                 shouldLimit = true;
 
                 if (configuration.headers) {
-                    res.setHeader('Retry-After', Math.floor(limit.outerReset - (now / 1000)));
+                    res.setHeader('Retry-After', Math.floor(limit.outerReset - (limit.date / 1000)));
                 }
             } else if (limit.inner < 1) {
                 shouldLimit = true;
 
                 if (configuration.headers) {
-                    res.setHeader('Retry-After', Math.floor(((limit.date + configuration.innerTimeLimit - now) / 1000)));
+                    res.setHeader('Retry-After', Math.floor(((previousLimitDate + configuration.innerTimeLimit - limit.date) / 1000)));
                 }
             }
 

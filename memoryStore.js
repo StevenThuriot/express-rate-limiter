@@ -43,7 +43,14 @@ MemoryStore.prototype.create = function (ip, limit, timeout, callback) {
     callback(null, limit);
 };
 
-MemoryStore.prototype.update = function (ip, limit, resetInner, callback) {
-    //In memory, already updated.
+MemoryStore.prototype.decreaseLimits = function (ip, limit, resetInner, configuration, callback) {
+    if (resetInner === true) {
+        limit.inner = configuration.innerLimit;
+    } else {
+        limit.inner--;
+    }
+
+    limit.outer--;
+
     callback(null, limit);
 };

@@ -22,17 +22,10 @@ Store.prototype.hit = function (req, configuration, callback) {
             var timeLimit = limitDate + configuration.innerTimeLimit;
 
             var resetInner = now > timeLimit;
-            if (resetInner === true) {
-                limit.inner = configuration.innerLimit;
-            } else {
-                limit.inner--;
-            }
-
-            limit.outer--;
             limit.date = now;
 
-            self.update(ip, limit, resetInner, function (error, result) {
-                callback(error, result, now);
+            self.decreaseLimits(ip, limit, resetInner, configuration, function (error, result) {
+                callback(error, result, limitDate);
             });
         } else {
             //New User
