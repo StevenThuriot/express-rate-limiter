@@ -1,7 +1,8 @@
-Express Rate Limiter
+[![Express Rate Limiter](http://img.dafont.com/preview.php?text=Express+Rate+Limiter&ttf=squared_display0&ext=1&size=64&psize=m&y=53)](https://github.com/StevenThuriot/express-rate-limiter)
 ====================
 
-![npm](https://img.shields.io/npm/v/express-rate-limiter.svg?style=flat-square) ![downloads](https://img.shields.io/npm/dm/express-rate-limiter.svg?style=flat-square) ![license](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=flat-square)
+[![npm](https://img.shields.io/npm/v/express-rate-limiter.svg?style=flat-square)](https://www.npmjs.org/package/express-rate-limiter) [![downloads](https://img.shields.io/npm/dm/express-rate-limiter.svg?style=flat-square)](https://www.npmjs.org/package/express-rate-limiter) [![license](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=flat-square)](https://www.npmjs.org/package/express-rate-limiter
+ )
 
 Rate limiter middleware for express applications.
 
