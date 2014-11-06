@@ -24,11 +24,11 @@ First, create a new Limiter;
 
 ```javascript
 var Limiter = require('express-rate-limiter');
-var MemoryStore = require('express-rate-limiter/memoryStore');
+var MemoryStore = require('express-rate-limiter/lib/memoryStore');
 var limiter = new Limiter({ db : new MemoryStore() });
 ```
 
-The memory store is a lightweight in memory cache. This can be replaced by any other database implementing [store.js](/store.js), for example the [MemoryStore](/memoryStore.js).
+The memory store is a lightweight in memory cache. This can be replaced by any other database implementing [store.js](/lib/store.js), for example the [MemoryStore](/lib/memoryStore.js).
 
 Afterwards, use the limiter to create an express middleware for the express methods you want to rate limit.
 
