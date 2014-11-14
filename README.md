@@ -99,6 +99,3 @@ The available headers are:
 * Retry-After (Only in case of a 429 response)
 
 For `X-RateLimit`-headers, the outer limits are used as response values.
-    
-#Roadmap
-- Redis plugin
