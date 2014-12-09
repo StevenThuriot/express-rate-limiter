@@ -99,3 +99,12 @@ The available headers are:
 * Retry-After (Only in case of a 429 response)
 
 For `X-RateLimit`-headers, the outer limits are used as response values.
+
+#Notes
+The framework relies on the fact that express' `req.ip` is correct. This might not always be the case, e.g. when running behind a proxy like NGINX or hosting your app on a platform like `Heroku`.
+
+When this is the case, don't forget to initialize express using the following snippet:
+
+```javascript
+app.enable('trust proxy');
+```
