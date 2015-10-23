@@ -74,7 +74,7 @@ Default settings for the created middleware are as follows:
 * pathLimiter: `boolean`
     * default: false
     * adds a path to the ip for the request limiter identifier. It allows to has differents limiters for each path in the application
-* path ''
+* path `''`
     * default: empty value
     * if this value is passed, it will be the value that will be joined to the ip for the limiter identifier. If has not value, the value will be readed from the request. This option only will be applied if "pathLimiter" has true as value
 
