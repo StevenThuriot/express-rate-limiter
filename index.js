@@ -5,7 +5,9 @@ var Limiter = module.exports = function (options) {
         innerTimeLimit: 1500, // 1.5 seconds
         innerLimit: 3,
         headers: true,
-        limitOnError: true
+        limitOnError: true,
+        pathLimiter: false,
+        path: ''
     };
 
     this.__configuration = this.__buildConfiguration(options);
