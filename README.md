@@ -71,6 +71,12 @@ Default settings for the created middleware are as follows:
 * db: `undefined`    
     * default: No default value available.
     * Key Value store being used to rate limit.
+* pathLimiter: `boolean`
+    * default: false
+    * adds a path to the ip for the request limiter identifier. It allows to has differents limiters for each path in the application
+* path ''
+    * default: empty value
+    * if this value is passed, it will be the value that will be joined to the ip for the limiter identifier. If has not value, the value will be readed from the request. This option only will be applied if "pathLimiter" has true as value
 
 They can be overwritten globally by passing them to the initiator. Properties that were not passed will automatically take default value.
 
