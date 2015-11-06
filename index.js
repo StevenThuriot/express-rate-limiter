@@ -92,7 +92,7 @@ Limiter.prototype.middleware = function (options) {
                 shouldLimit = true;
 
                 if (configuration.headers) {
-                    res.setHeader('Retry-After', Math.floor(limit.outerReset - (limit.date / 1000)));
+                    res.setHeader('Retry-After', Math.floor(limit.outerReset - (limit.firstDate / 1000)));
                 }
             } else if (limit.inner < 1) {
                 shouldLimit = true;
